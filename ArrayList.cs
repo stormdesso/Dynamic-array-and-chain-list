@@ -4,19 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lab3
+namespace Lab4
 {
-    class ArrayList
+    internal class ArrayList : BaseList
     {
         private int[] a = new int[3];
 
-        private int count;
-        public int Count
-        {
-            get { return count; }
-        }
-
-        public int this[int i]
+        public override int this[int i]
         {
             set
             {
@@ -47,7 +41,7 @@ namespace lab3
             a = tmp;
         }
 
-        public void Add(int a)
+        public override void Add(int a)
         {
             if (Count >= this.a.Length)
             {
@@ -57,8 +51,7 @@ namespace lab3
             count++;
 
         }
-
-        public void Del(int pos)
+        public override void Del(int pos)
         {
             if (pos >= Count || pos < 0)
                 Console.WriteLine("Недопустимый индекс, при удалении");
@@ -75,12 +68,11 @@ namespace lab3
                     {
                         count = 0;
                     }
-                        
+
                 }
             }
         }
-
-        public void Insert(int pos, int a)
+        public override void Insert(int pos, int a)
         {
             if (count == pos)
                 Resize();
@@ -100,27 +92,21 @@ namespace lab3
             else
                 Console.WriteLine("Некорректный индекс, при вставке в массив");
         }
-
-        public void Clear()
+        public override void Clear()
         {
-              
-            for ( int i = 0; i < a.Length; i++)
+
+            for (int i = 0; i < a.Length; i++)
             {
-                this.a[i] = 0;  
+                this.a[i] = 0;
             }
             count = 0;
         }
-
-        public void Print()
+                      
+        public override BaseList Clone()
         {
-            Console.WriteLine();
-            if ( count >= 0)
-            {
-                for (int j = 0; j < a.Length; j++)
-                {
-                    Console.Write(a[j] + " ");
-                }
-            }
+            ArrayList cloneElement = new ArrayList();
+            cloneElement.Assign(this);//this - текущий экземпляр класса ArrayList            
+            return cloneElement;
         }
     }
 }

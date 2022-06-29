@@ -4,25 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lab3
+namespace Lab4
 {
-    class ChainList
+    internal class ChainList : BaseList
     {
         class Node
         {
             public int Data { get; set; }
             public Node Next { get; set; } //объект типа данных Node, который хранит в себе ссылку на следующий объект           
         }
-        private Node head = null;
-        private int count = 0;
-        public int Count
+        private Node head = null;               
+        public override int this[int i]
         {
-            get { return count; }
-        }
-
-        public int this[int i]
-        {
-
             set
             {
                 if (i >= 0 && i < count)
@@ -41,9 +34,7 @@ namespace lab3
                     return -1;
                 }
             }
-
         }
-
         private Node Find(int i)
         {
             if (i < 0 || i > Count)
@@ -60,7 +51,7 @@ namespace lab3
             }
             return searchElement;
         }
-        public void Add(int a)
+        public override void Add(int a)
         {
             Node newTail = new Node();
             newTail.Data = a;//поле Next по дефолту null
@@ -73,8 +64,7 @@ namespace lab3
             }
             count++;
         }
-
-        public void Del(int pos)
+        public override void Del(int pos)
         {
             if (pos >= Count || pos < 0)
                 Console.WriteLine("Недопустимый индекс, при удалении элемента");
@@ -95,8 +85,7 @@ namespace lab3
                 count--;
             }
         }
-
-        public void Insert(int pos, int a)
+        public override void Insert(int pos, int a)
         {
             Node newNode = new Node();
             newNode.Data = a;
@@ -121,22 +110,42 @@ namespace lab3
             }
         }
 
-        public void Clear()
+        public override void Clear()
         {
             head = null;
             count = 0;
         }
-
-        public void Print()
-        {
-            Node tmp = head;
-            while (tmp != null)
+        //сортировка Пузырьком       
+        public override void Sort()
+        {            
+            Node currentNode = head;                    
+            bool check = true;
+            while (check == true)
             {
-                Console.WriteLine(tmp.Data);
-                tmp = tmp.Next;
+                check = false;
+                currentNode = head;
+                while (check == false && currentNode.Next != null)
+                {
+                    if ( currentNode.Data <= currentNode.Next.Data)                     
+                        currentNode = currentNode.Next;                    
+                    else
+                    {    
+                        int temp;
+                        temp = currentNode.Data;
+                        currentNode.Data = currentNode.Next.Data;
+                        currentNode.Next.Data = temp;
+                        check = true;
+                    }
+                }
             }
-            Console.Write("\n");
         }
-
+        
+        public override BaseList Clone()
+        {            
+            ChainList cloneElement = new ChainList();            
+            cloneElement.Assign(this);//this - текущий экземпляр класса ChainList            
+            return cloneElement;
+        }
+        
     }
 }

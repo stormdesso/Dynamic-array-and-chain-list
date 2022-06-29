@@ -4,139 +4,121 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lab3
+namespace Lab4
 {
-   
-    class Test
+    class Class4
     {
-        public static void Main()
-        {      
+        static void Main(string[] args)
+        {
+            
             Random randomGenerator = new Random();
             int n = 0;
-            
-            //ArrayList test
-            
             ArrayList Array = new ArrayList();
-            Console.WriteLine("BEGIN");
-            
+            ChainList Chain = new ChainList();
+                                
             for (int i = 0; i < 10; i++)
-            {
-                Console.WriteLine("№ {0}",(i+1));
-                n = randomGenerator.Next(1, 7);
-                testArray(Array, n);
-            }            
-            Console.WriteLine("END");
+            {                
+                n = randomGenerator.Next(1, 5);
+                test( Chain, Array, n );
+            }
+
+            Console.WriteLine("\n");
             
 
-            //ChainList test
-            Console.WriteLine("BEGIN");            
-            ChainList Chain = new ChainList();
-            n = 0;
-            for (int i = 0; i < 10; i++)
+            bool check = true;
+            for (int i = 0; i < Array.Count; i++)
             {
-                Console.WriteLine("№ {0}", (i + 1));
-                n = randomGenerator.Next(1, 7);
-                testChain(Chain, n);
+                if ( Array[i] != Chain[i] )
+                    check = false;
             }
-            Console.WriteLine("END");
+            Console.WriteLine("Списки: ");
+            Array.Print();
+            Chain.Print();
+
+            Console.WriteLine("Списки совпадают:{0} ",check);
+            
+            BaseList Base_Chain = Chain.Clone();
+            BaseList Base_Array = Array.Clone();
+
+            Console.WriteLine("Клон связанного списка");
+            Base_Chain.Print();
+            Console.WriteLine("Клон массива");
+            Base_Array.Print();
+                       
+            Console.WriteLine("Скопированный список типа данных: {0}", Base_Chain.GetType());
+            Console.WriteLine("Скопированный массив типа данных: {0}", Base_Array.GetType());
+            
+            Console.WriteLine("Base_Chain до сортировки");
+            Base_Chain.Print();            
+            Console.WriteLine("Base_Chain после сортировки");
+            Base_Chain.Sort();
+            Base_Chain.Print();
+
+            Console.WriteLine("Base_Array до сортировки");
+            Base_Array.Print();
+            Console.WriteLine("Base_Array после сортировки");
+            Base_Array.Sort();
+            Base_Array.Print();
+
+            check = true;
+            for (int i = 0; i < Array.Count; i++)
+            {
+                if (Base_Array[i] != Base_Chain[i])
+                    check = false;
+            }
+            Console.WriteLine("\nСортировка верная? ");
+            Console.WriteLine(check);
+
+
+            Console.WriteLine("результат выполнения array.Assign(Base_chain) :"); 
+            BaseList array = new ArrayList();
+            array.Assign(Base_Chain);            
+            array.Print();
+            Console.WriteLine("Тип списка array :{0}",array.GetType());
+
+            Console.WriteLine("Исходник(Base_Chain) :");
+            Base_Chain.Print();
+
+            Console.ReadKey();
 
         }
-        
-        public static void testArray(ArrayList arrayList, int n)
+
+        public static void test(ChainList Chain, ArrayList Array, int n)
         {
             Random randomGenerator = new Random();
             int pos = randomGenerator.Next(0, 10000);
-            int value = randomGenerator.Next(-1000000, 1000001);
-            Console.WriteLine("-----------");           
-            
+            int value = randomGenerator.Next(-1000000, 1000001);            
             switch (n)
             {
-                case 1: 
-                    Console.WriteLine("add: " + value + " count = " + arrayList.Count);// Add
-                    arrayList.Add(value);
-                    break;
-
-                case 2: 
-                    Console.WriteLine("count: " + arrayList.Count);// count
-                    break;
-
-                case 3: 
-                    Console.WriteLine("clear: ");// clear
-                    arrayList.Clear();
-                    break;
-
-                case 4: 
-                    Console.WriteLine("ArrayList["+pos+"]"+" = " + value);// this
-                    arrayList[pos] = value;
-                    Console.WriteLine(arrayList[pos]);
-                    break;
-                case 5: 
-                    Console.WriteLine("del: " + pos);// del
-                    arrayList.Del(pos);
-                    break;
-                
-                case 6: 
-                    Console.WriteLine("insert number: " + value + " position:" + pos);// insert
-                    arrayList.Insert(pos, value);
-                    break;                
-
-                default:
-                    
-                    break;
-            }
-            Console.Write("Массив:");
-            arrayList.Print();
-            Console.WriteLine("\n-----------");
-            Console.WriteLine("\n");
-        }
-        
-        public static void testChain(ChainList Chain, int n)
-        {            
-            Random randomGenerator = new Random();
-            int pos = randomGenerator.Next(0, 10000);
-            int value = randomGenerator.Next(-1000000, 1000001);
-            Console.WriteLine("-----------");
-            switch (n)
-            {
-                case 1: 
-                    Console.WriteLine("add: " + value + " сount = " + Chain.Count);// Add
+                case 1:                    
                     Chain.Add(value);
-                    break;
+                    Array.Add(value);
+                    break;                
                 
-                case 2: 
-                    Console.WriteLine("clear: ");// Clear
-                    Chain.Clear();
-                    break;
-
-                case 3: 
-                    Console.WriteLine("сount: " + Chain.Count);// Count
-                    break;
-
-                case 4:
-                    Console.WriteLine("ChainList[" + pos + "]" + " = " + value);// This
+                case 2:
+                    
                     Chain[pos] = value;
-                    Console.WriteLine(Chain[pos]);
+                    Array[pos] = value;
+                    
                     break;
 
-                case 5: 
-                    Console.WriteLine("del: " + pos);// Del
+                case 3:
+                    
                     Chain.Del(pos);
+                    Array.Del(pos);
                     break;
-                case 6: 
-                    Console.WriteLine("insert number: " + value + " position:" + pos);
+                case 4:
+                    
                     Chain.Insert(pos, value);// Insert
+                    Array.Insert(pos, value);
                     break;
 
                 default:
-                    
                     break;
-            }                        
-            Console.Write("Список:");
-            Chain.Print();
-            Console.WriteLine("\n-----------");
-            Console.WriteLine("\n");
+            }                       
 
         }
 
+        
     }
 }
