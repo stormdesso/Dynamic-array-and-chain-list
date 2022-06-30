@@ -4,24 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab4
+namespace Lab5
 {
-    internal class ChainList : BaseList
+    class ChainList<T> : BaseList<T> where T: IComparable<T>
     {
         class Node
         {
-            public int Data { get; set; }
+            public T Data { get; set; }
             public Node Next { get; set; } //объект типа данных Node, который хранит в себе ссылку на следующий объект           
         }
         private Node head = null;               
-        public override int this[int i]
+        public override T this[int i]
         {
             set
             {
                 if (i >= 0 && i < count)
                     Find(i).Data = value;
                 else
-                    Console.WriteLine("Некорректный индекс для обращения");
+                {                    
+                    throw new EIndexError(count, i);
+                }
             }
 
             get
@@ -30,8 +32,7 @@ namespace Lab4
                     return Find(i).Data;
                 else
                 {
-                    Console.WriteLine("Некорректный индекс для обращения");
-                    return -1;
+                    throw new EIndexError(count, i);
                 }
             }
         }
@@ -39,8 +40,7 @@ namespace Lab4
         {
             if (i < 0 || i > Count)
             {
-                Console.WriteLine("Некорректный индекс для поиска элемента");
-                return null;
+                throw new EIndexError(count, i);
             }
             Node searchElement = head;
             int n = 0;
@@ -51,7 +51,7 @@ namespace Lab4
             }
             return searchElement;
         }
-        public override void Add(int a)
+        public override void Add(T a)
         {
             Node newTail = new Node();
             newTail.Data = a;//поле Next по дефолту null
@@ -67,7 +67,7 @@ namespace Lab4
         public override void Del(int pos)
         {
             if (pos >= Count || pos < 0)
-                Console.WriteLine("Недопустимый индекс, при удалении элемента");
+                throw new EIndexError(count, pos);
             else
             {
                 if (pos == 0)
@@ -85,13 +85,13 @@ namespace Lab4
                 count--;
             }
         }
-        public override void Insert(int pos, int a)
+        public override void Insert(int pos, T a)
         {
             Node newNode = new Node();
             newNode.Data = a;
 
             if (pos < 0 || pos > count - 1)
-                Console.WriteLine("Некорректный индекс для вставки");
+                throw new EIndexError(count, pos);
             else
             {
                 if (pos == 0)
@@ -126,11 +126,11 @@ namespace Lab4
                 currentNode = head;
                 while (check == false && currentNode.Next != null)
                 {
-                    if ( currentNode.Data <= currentNode.Next.Data)                     
+                    if (currentNode.Data.CompareTo(currentNode.Next.Data) <= 0)                     
                         currentNode = currentNode.Next;                    
                     else
                     {    
-                        int temp;
+                        T temp;
                         temp = currentNode.Data;
                         currentNode.Data = currentNode.Next.Data;
                         currentNode.Next.Data = temp;
@@ -140,9 +140,9 @@ namespace Lab4
             }
         }
         
-        public override BaseList Clone()
+        public override BaseList<T> Clone()
         {            
-            ChainList cloneElement = new ChainList();            
+            ChainList<T> cloneElement = new ChainList<T>();            
             cloneElement.Assign(this);//this - текущий экземпляр класса ChainList            
             return cloneElement;
         }
